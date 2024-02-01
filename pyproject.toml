@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0.0"]
+build-backend = "setuptools.build_meta"
+
+
+
+[project]
+name = "rezq"
+version = "0.1.1"
+description = "Ensuring data quality in Delta Lake"
+requires-python = ">=3.8"
+authors = [{ name = "Marco Rezende", email = "marcomrezende@gmail.com" }]
+readme = "README.md"
+license = { file = "LICENSE" }
+
+keywords = ["delta lake", "data quality"]
+dependencies = [
+    "pyspark >= 3.3.0",
+    "delta-spark >=2.3.0",
+]
+[project.urls]
+Home = "https://github.com/marcorezende/rezq"
