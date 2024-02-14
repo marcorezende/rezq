@@ -6,12 +6,14 @@ from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql.functions import expr, lit
 
 logging.basicConfig(level=logging.INFO)
+logging.getLogger("py4j").setLevel(logging.ERROR)
+logging.getLogger("pyspark").setLevel(logging.ERROR)
 logger = logging.getLogger(__name__)
 
 
 def add_constraint(spark_session: SparkSession, delta_table: DeltaTable, constraint_name: str, constraint_code: str):
     """
-    Add Constraints: Add constraint of a Delta Table.
+    Add Constraint: Add constraint to a Delta Table.
 
     Args:
         spark_session (SparkSession): A SparkSession.
@@ -26,6 +28,25 @@ def add_constraint(spark_session: SparkSession, delta_table: DeltaTable, constra
     """
     spark_session.sql(query)
     logger.info(f'Constraint {constraint_name} successfully added')
+
+
+def add_constraints(spark_session: SparkSession, delta_table: DeltaTable, constraints: dict):
+    """
+    Add Constraints: Add a list of constraint to a Delta Table.
+
+    Args:
+        spark_session (SparkSession): A SparkSession.
+        delta_table (DeltaTable): The Delta Table to be analyzed.
+        constraints (dict): The constraints, with name as key and code as value to be added.
+    """
+    location = delta_table.detail().select("location").take(1)[0][0]
+    for constraint_name, constraint_code in constraints.items():
+        query = f"""
+            ALTER TABLE delta.`{location}`
+            ADD CONSTRAINT {constraint_name} CHECK ({constraint_code})
+        """
+        spark_session.sql(query)
+        logger.info(f'Constraint {constraint_name} successfully added')
 
 
 def remove_constraint(spark_session: SparkSession, delta_table: DeltaTable, constraint_name: str):
@@ -68,7 +89,7 @@ def get_constraints(delta_table: DeltaTable):
 
 def get_cleaned_and_quarantine(delta_table: DeltaTable, merge_df: DataFrame, add_not_null=True):
     """
-    Get Cleaned and Quarantine: Create a graphic for the specified type.
+    Get Cleaned and Quarantine: Return a cleaned and quarantine DataFrame.
 
     Args:
         delta_table (DeltaTable): The Delta Table for which to create a graphic.
@@ -80,7 +101,7 @@ def get_cleaned_and_quarantine(delta_table: DeltaTable, merge_df: DataFrame, add
         quarantine_df: An DataFrame of the invalid rows according to constraints.
     """
 
-    if not isinstance(delta_table, DeltaTable):
+    if not isinstance(delta_table, DeltaTable) and not type(delta_table).__name__ == 'DeltaTable':
         raise TypeError("An existing delta table must be specified for delta_table.")
 
     if not isinstance(merge_df, DataFrame):

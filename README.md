@@ -23,6 +23,19 @@ add_constraint(spark_session=spark,
                 constraint_name='age_higher_than_20',
                 constraint_code='age > 20')
 ```
+
+## Add constraints
+To add multiple a constraints to a delta table:
+```bash
+from rezq import add_constraints
+from delta import DeltaTable
+
+delta_table = DeltaTable.forPath(spark, 'my_table_path')
+add_constraints(spark_session=spark,
+                    delta_table=mock_delta_table,
+                    constraints={"name_is_not_null": "name is not null",
+                                 "age_higher_than_20": "age > 20"})
+```
 ## Remove constraint
 To remove a constraint to a delta table:
 ```bash
@@ -56,3 +69,8 @@ cleaned_df, quarantine_df = get_cleaned_and_quarantine(delta_table=delta_table,
                                         merge_df=df)
 
 ```
+![alt text](./images/example.png)
+You can use the cleaned_df to create a new delta, append or merge to an existent one
+and use quarantine_df to get metrics about data quality and decide later what to do
+with this rows
+![alt text](./images/chart.png)

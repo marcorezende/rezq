@@ -1,6 +1,6 @@
 import datetime
 
-from src.rezq import get_cleaned_and_quarantine, add_constraint, get_constraints, remove_constraint
+from src.rezq import get_cleaned_and_quarantine, add_constraint, get_constraints, remove_constraint, add_constraints
 
 
 def test_add_constraint(mock_delta_table, spark):
@@ -13,6 +13,19 @@ def test_add_constraint(mock_delta_table, spark):
         k: v for k, v in properties.items() if k.startswith("delta.constraints")
     }
     assert constraints.get('delta.constraints.name_is_not_null') == 'name is not null'
+
+
+def test_add_constraints(mock_delta_table, spark):
+    add_constraints(spark_session=spark,
+                    delta_table=mock_delta_table,
+                    constraints={"name_is_not_ose": "name != 'Ose'",
+                                 "name_is_not_vanilton": "name != 'Vanilton'"})
+    properties = mock_delta_table.detail().select("properties").collect()[0]["properties"]
+    constraints = {
+        k: v for k, v in properties.items() if k.startswith("delta.constraints")
+    }
+    assert constraints.get('delta.constraints.name_is_not_ose') == "name != 'Ose'"
+    assert constraints.get('delta.constraints.name_is_not_vanilton') == "name != 'Vanilton'"
 
 
 def test_remove_constraint(mock_delta_table_with_name_constraint, spark):
