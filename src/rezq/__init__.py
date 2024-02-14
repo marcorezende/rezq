@@ -104,7 +104,7 @@ def get_cleaned_and_quarantine(delta_table: DeltaTable, merge_df: DataFrame, add
     if not isinstance(delta_table, DeltaTable) and not type(delta_table).__name__ == 'DeltaTable':
         raise TypeError("An existing delta table must be specified for delta_table.")
 
-    if not isinstance(merge_df, DataFrame):
+    if not isinstance(merge_df, DataFrame) and not type(merge_df).__name__ == 'DataFrame':
         raise TypeError("You must provide a DataFrame.")
 
     properties = delta_table.detail().select("properties").collect()[0]["properties"]

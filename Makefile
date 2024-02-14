@@ -6,6 +6,14 @@ install_dev:
 install_test:
 	python -m pip install ".[test]/"
 
-.PHONY: run_test
-run_test:
+.PHONY: test
+test:
 	pytest .\tests\test.py
+
+.PHONY: build
+build:
+	python setup.py sdist
+
+.PHONY: upload
+upload:
+	twine upload dist/*
