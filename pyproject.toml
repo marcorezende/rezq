@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rezq"
-version = "0.1.3"
+version = "0.1.4"
 description = "Ensuring data quality in Delta Lake"
 requires-python = ">=3.8"
 authors = [{ name = "Marco Rezende", email = "marcomrezende@gmail.com" }]

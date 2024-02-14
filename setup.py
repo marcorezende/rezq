@@ -12,7 +12,7 @@ dependencies = {
 
 setup(
     name='rezq',
-    version='0.1.3',
+    version='0.1.4',
     packages=['rezq'],
     python_requires='>=3.8',
     package_dir={"": "src"},

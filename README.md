@@ -69,8 +69,9 @@ cleaned_df, quarantine_df = get_cleaned_and_quarantine(delta_table=delta_table,
                                         merge_df=df)
 
 ```
-![alt text](./images/example.png)
+![alt text](https://raw.githubusercontent.com/marcorezende/rezq/main/images/example.png)
 You can use the cleaned_df to create a new delta, append or merge to an existent one
 and use quarantine_df to get metrics about data quality and decide later what to do
 with this rows
-![alt text](./images/chart.png)
+
+![alt text](https://raw.githubusercontent.com/marcorezende/rezq/main/images/chart.png)
